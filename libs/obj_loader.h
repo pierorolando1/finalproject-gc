@@ -25,6 +25,7 @@ namespace objl
 		std::vector<float> vertices_normals;
 		std::vector<float> vertices_tex_coords;
 		std::vector<unsigned int> indices_pointers;
+		std::vector<GLfloat> position;
 
 		mat::Material material;
 	};
@@ -260,6 +261,46 @@ namespace objl
 				}
 
 				return info;
+			}
+
+			void drawBoundingBox()
+			{
+				float xMin = 0, yMin = 0, zMin = 0;
+				float xMax = 0, yMax = 0, zMax = 0;
+
+				for (Vertex vertex : Vertices)
+				{
+					if (vertex.Position.X < xMin) xMin = vertex.Position.X;
+					if (vertex.Position.Y < yMin) yMin = vertex.Position.Y;
+					if (vertex.Position.Z < zMin) zMin = vertex.Position.Z;
+
+					if (vertex.Position.X > xMax) xMax = vertex.Position.X;
+					if (vertex.Position.Y > yMax) yMax = vertex.Position.Y;
+					if (vertex.Position.Z > zMax) zMax = vertex.Position.Z;
+				}
+
+				glColor3f(1.0, 0.0, 0.0); // Color rojo para el cubo
+				glBegin(GL_LINES);
+					// Líneas de los bordes del cubo
+					glVertex3f(xMin, yMin, zMin); glVertex3f(xMax, yMin, zMin);
+					glVertex3f(xMin, yMin, zMin); glVertex3f(xMin, yMax, zMin);
+					glVertex3f(xMin, yMin, zMin); glVertex3f(xMin, yMin, zMax);
+
+					glVertex3f(xMax, yMax, zMax); glVertex3f(xMin, yMax, zMax);
+					glVertex3f(xMax, yMax, zMax); glVertex3f(xMax, yMin, zMax);
+					glVertex3f(xMax, yMax, zMax); glVertex3f(xMax, yMax, zMin);
+
+					glVertex3f(xMin, yMax, zMin); glVertex3f(xMax, yMax, zMin);
+					glVertex3f(xMin, yMax, zMin); glVertex3f(xMin, yMax, zMax);
+
+					glVertex3f(xMax, yMin, zMin); glVertex3f(xMax, yMax, zMin);
+					glVertex3f(xMax, yMin, zMin); glVertex3f(xMax, yMin, zMax);
+
+					glVertex3f(xMin, yMin, zMax); glVertex3f(xMax, yMin, zMax);
+					glVertex3f(xMin, yMin, zMax); glVertex3f(xMin, yMax, zMax);
+				glEnd();
+			glPopMatrix();
+
 			}
 	};
 
